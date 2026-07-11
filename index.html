@@ -15,6 +15,10 @@
     Locais a atualizar no <head>: canonical, og:url, og:image,
     og:image:secure_url, twitter:image e link rel="image_src".
     (No JS abaixo também existe a constante SITE_URL, apenas informativa.)
+
+    OBS: os metadados usam capa-og.jpg (versão leve, ~69 KB) porque o
+    WhatsApp ignora imagens de prévia acima de ~300 KB. A capa grande
+    (capa-livro-de-ordens.png) continua sendo exibida DENTRO da página.
     ============================================================
   -->
   <link rel="canonical" href="https://SEU-PROJETO.vercel.app/">
@@ -29,20 +33,20 @@
   <meta property="og:locale" content="pt_BR">
   <meta property="og:site_name" content="Livro de Ordens CBMERJ">
   <meta property="og:url" content="https://SEU-PROJETO.vercel.app/">
-  <meta property="og:image" content="https://SEU-PROJETO.vercel.app/capa-livro-de-ordens.png">
-  <meta property="og:image:secure_url" content="https://SEU-PROJETO.vercel.app/capa-livro-de-ordens.png">
-  <meta property="og:image:type" content="image/png">
-  <meta property="og:image:width" content="3168">
-  <meta property="og:image:height" content="1344">
+  <meta property="og:image" content="https://SEU-PROJETO.vercel.app/capa-og.jpg">
+  <meta property="og:image:secure_url" content="https://SEU-PROJETO.vercel.app/capa-og.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="509">
   <meta property="og:image:alt" content="Capa do Livro de Ordens CBMERJ">
 
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Livro de Ordens CBMERJ">
   <meta name="twitter:description" content="Buscador de notas, boletins, manuais, normas e documentos do CBMERJ desde 1985.">
-  <meta name="twitter:image" content="https://SEU-PROJETO.vercel.app/capa-livro-de-ordens.png">
+  <meta name="twitter:image" content="https://SEU-PROJETO.vercel.app/capa-og.jpg">
 
-  <link rel="image_src" href="https://SEU-PROJETO.vercel.app/capa-livro-de-ordens.png">
+  <link rel="image_src" href="https://SEU-PROJETO.vercel.app/capa-og.jpg">
 
   <style>
     /* ===== Variáveis de tema ===== */
