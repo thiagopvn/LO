@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Livro de Ordens CBMERJ</title>
+  <meta name="description" content="Buscador de notas, boletins, manuais, normas e documentos do CBMERJ desde 1985.">
+
+  <!--
+    ============================================================
+    ATENÇÃO: domínio provisório.
+    Após o primeiro deploy na Vercel, troque TODAS as ocorrências de
+    https://SEU-PROJETO.vercel.app  pelo domínio real do projeto.
+    Locais a atualizar no <head>: canonical, og:url, og:image,
+    og:image:secure_url, twitter:image e link rel="image_src".
+    (No JS abaixo também existe a constante SITE_URL, apenas informativa.)
+    ============================================================
+  -->
+  <link rel="canonical" href="https://SEU-PROJETO.vercel.app/">
+
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0a0a0f">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Livro de Ordens CBMERJ">
+  <meta property="og:description" content="Buscador de notas, boletins, manuais, normas e documentos do CBMERJ desde 1985.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Livro de Ordens CBMERJ">
+  <meta property="og:url" content="https://SEU-PROJETO.vercel.app/">
+  <meta property="og:image" content="https://SEU-PROJETO.vercel.app/capa-livro-de-ordens.png">
+  <meta property="og:image:secure_url" content="https://SEU-PROJETO.vercel.app/capa-livro-de-ordens.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="3168">
+  <meta property="og:image:height" content="1344">
+  <meta property="og:image:alt" content="Capa do Livro de Ordens CBMERJ">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Livro de Ordens CBMERJ">
+  <meta name="twitter:description" content="Buscador de notas, boletins, manuais, normas e documentos do CBMERJ desde 1985.">
+  <meta name="twitter:image" content="https://SEU-PROJETO.vercel.app/capa-livro-de-ordens.png">
+
+  <link rel="image_src" href="https://SEU-PROJETO.vercel.app/capa-livro-de-ordens.png">
+
+  <style>
+    /* ===== Variáveis de tema ===== */
+    :root {
+      --preto:        #060608;
+      --grafite:      #0f0f16;
+      --grafite-2:    #171722;
+      --vermelho:     #c1121f; /* vermelho bombeiro */
+      --vermelho-viv: #e23241;
+      --dourado:      #e7c66b;
+      --dourado-esc:  #b8912f;
+      --texto:        #f2f0ea;
+      --texto-suave:  #b8b6c2;
+      --vidro:        rgba(20, 20, 30, 0.55);
+      --borda-vidro:  rgba(231, 198, 107, 0.22);
+      --raio:         20px;
+      --sombra:       0 30px 70px -20px rgba(0, 0, 0, 0.9);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      max-width: 100%;
+      overflow-x: hidden; /* sem rolagem horizontal */
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+      color: var(--texto);
+      background:
+        radial-gradient(1200px 600px at 15% -10%, rgba(193, 18, 31, 0.35), transparent 60%),
+        radial-gradient(1000px 500px at 100% 110%, rgba(193, 18, 31, 0.20), transparent 55%),
+        radial-gradient(900px 700px at 85% 10%, rgba(231, 198, 107, 0.10), transparent 60%),
+        linear-gradient(160deg, var(--preto) 0%, var(--grafite) 55%, #0b0b12 100%);
+    }
+
+    /* ===== Cartão de vidro escuro ===== */
+    .cartao {
+      width: 100%;
+      max-width: 720px;
+      background: var(--vidro);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--borda-vidro);
+      border-radius: 28px;
+      box-shadow: var(--sombra), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      padding: 28px 28px 32px;
+      text-align: center;
+    }
+
+    /* ===== Imagem de capa ===== */
+    .capa-wrap {
+      max-width: 640px;
+      margin: 0 auto 26px;
+      border-radius: var(--raio);
+      padding: 2px; /* espaço para borda vermelho + dourado */
+      background: linear-gradient(135deg, var(--vermelho) 0%, var(--dourado) 50%, var(--vermelho-viv) 100%);
+      box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.85), 0 0 40px -10px rgba(193, 18, 31, 0.45);
+    }
+
+    .capa {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: calc(var(--raio) - 2px);
+      border: 1px solid rgba(0, 0, 0, 0.4);
+    }
+
+    /* ===== Textos ===== */
+    h1 {
+      margin: 6px 0 10px;
+      font-size: clamp(1.6rem, 5vw, 2.3rem);
+      letter-spacing: 0.5px;
+      background: linear-gradient(180deg, #fff 0%, var(--dourado) 130%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitulo {
+      margin: 0 auto 22px;
+      max-width: 46ch;
+      color: var(--texto-suave);
+      font-size: clamp(0.95rem, 2.6vw, 1.05rem);
+      line-height: 1.5;
+    }
+
+    /* ===== Redirecionamento / carregando ===== */
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 4px 0 20px;
+      color: var(--texto-suave);
+      font-size: 0.9rem;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(231, 198, 107, 0.25);
+      border-top-color: var(--dourado);
+      animation: girar 0.9s linear infinite;
+    }
+
+    @keyframes girar { to { transform: rotate(360deg); } }
+
+    /* ===== Botão principal ===== */
+    .botao {
+      display: inline-block;
+      padding: 15px 30px;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-decoration: none;
+      color: #fff;
+      background: linear-gradient(135deg, var(--vermelho) 0%, var(--vermelho-viv) 100%);
+      border: 1px solid rgba(231, 198, 107, 0.55);
+      box-shadow: 0 14px 30px -10px rgba(193, 18, 31, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .botao:hover { transform: translateY(-2px); filter: brightness(1.06); }
+    .botao:active { transform: translateY(0); }
+
+    /* foco visível para acessibilidade */
+    .botao:focus-visible {
+      outline: 3px solid var(--dourado);
+      outline-offset: 3px;
+    }
+
+    .fallback {
+      margin: 18px auto 0;
+      max-width: 42ch;
+      font-size: 0.82rem;
+      color: rgba(184, 182, 194, 0.75);
+      line-height: 1.5;
+    }
+
+    /* ===== Respeita usuários que preferem menos movimento ===== */
+    @media (prefers-reduced-motion: reduce) {
+      .spinner { animation: none; }
+      .botao { transition: none; }
+    }
+
+    @media (max-width: 480px) {
+      .cartao { padding: 20px 16px 24px; border-radius: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="cartao">
+    <div class="capa-wrap">
+      <img
+        class="capa"
+        src="capa-livro-de-ordens.png"
+        alt="Capa do Livro de Ordens CBMERJ — brasão do Grupamento Operacional do Comando Geral"
+        width="3168" height="1344">
+    </div>
+
+    <h1>Livro de Ordens CBMERJ</h1>
+    <p class="subtitulo">TODAS AS PRINCIPAIS NOTAS E DETERMINAÇÕES CONFERIDO DESDE 1985</p>
+
+    <p class="status" role="status">
+      <span class="spinner" aria-hidden="true"></span>
+      <span>Redirecionando para o sistema...</span>
+    </p>
+
+    <!-- Link real (funciona sem JavaScript) + acessibilidade -->
+    <a id="acessar" class="botao" href="https://script.google.com/macros/s/AKfycbzirl9IUQq7m2rYPLnPV3_J8Qz_SuGz0T5XtPBLLqomAVt-m5RnRWgeRlqh6j9X1qL9/exec">
+      Acessar o Livro de Ordens
+    </a>
+
+    <p class="fallback">Caso o redirecionamento não aconteça, clique no botão acima.</p>
+  </main>
+
+  <script>
+    // ============================================================
+    // DEPOIS DO PRIMEIRO DEPLOY: troque a URL abaixo pelo domínio
+    // real fornecido pela Vercel. Esta constante é apenas de apoio;
+    // os metadados que valem para as prévias estão no <head>.
+    // ============================================================
+    const SITE_URL = 'https://SEU-PROJETO.vercel.app';
+
+    // Destino real do sistema (Google Apps Script).
+    const DESTINO = 'https://script.google.com/macros/s/AKfycbzirl9IUQq7m2rYPLnPV3_J8Qz_SuGz0T5XtPBLLqomAVt-m5RnRWgeRlqh6j9X1qL9/exec';
+
+    // Redirecionamento automático após 2,5s, iniciado no DOMContentLoaded.
+    // Sem meta refresh: robôs de prévia (WhatsApp, Telegram, etc.) não são redirecionados.
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () {
+        window.location.replace(DESTINO);
+      }, 2500);
+    });
+  </script>
+</body>
+</html>
