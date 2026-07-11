@@ -9,19 +9,15 @@
 
   <!--
     ============================================================
-    ATENÇÃO: domínio provisório.
-    Após o primeiro deploy na Vercel, troque TODAS as ocorrências de
-    https://SEU-PROJETO.vercel.app  pelo domínio real do projeto.
-    Locais a atualizar no <head>: canonical, og:url, og:image,
-    og:image:secure_url, twitter:image e link rel="image_src".
-    (No JS abaixo também existe a constante SITE_URL, apenas informativa.)
+    Domínio de produção: https://livro-de-ordens.vercel.app
+    Os metadados abaixo usam URLs absolutas desse domínio.
 
     OBS: os metadados usam capa-og.jpg (versão leve, ~69 KB) porque o
     WhatsApp ignora imagens de prévia acima de ~300 KB. A capa grande
     (capa-livro-de-ordens.png) continua sendo exibida DENTRO da página.
     ============================================================
   -->
-  <link rel="canonical" href="https://SEU-PROJETO.vercel.app/">
+  <link rel="canonical" href="https://livro-de-ordens.vercel.app/">
 
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#0a0a0f">
@@ -32,9 +28,9 @@
   <meta property="og:type" content="website">
   <meta property="og:locale" content="pt_BR">
   <meta property="og:site_name" content="Livro de Ordens CBMERJ">
-  <meta property="og:url" content="https://SEU-PROJETO.vercel.app/">
-  <meta property="og:image" content="https://SEU-PROJETO.vercel.app/capa-og.jpg">
-  <meta property="og:image:secure_url" content="https://SEU-PROJETO.vercel.app/capa-og.jpg">
+  <meta property="og:url" content="https://livro-de-ordens.vercel.app/">
+  <meta property="og:image" content="https://livro-de-ordens.vercel.app/capa-og.jpg">
+  <meta property="og:image:secure_url" content="https://livro-de-ordens.vercel.app/capa-og.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="509">
@@ -44,9 +40,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Livro de Ordens CBMERJ">
   <meta name="twitter:description" content="Buscador de notas, boletins, manuais, normas e documentos do CBMERJ desde 1985.">
-  <meta name="twitter:image" content="https://SEU-PROJETO.vercel.app/capa-og.jpg">
+  <meta name="twitter:image" content="https://livro-de-ordens.vercel.app/capa-og.jpg">
 
-  <link rel="image_src" href="https://SEU-PROJETO.vercel.app/capa-og.jpg">
+  <link rel="image_src" href="https://livro-de-ordens.vercel.app/capa-og.jpg">
 
   <style>
     /* ===== Variáveis de tema ===== */
@@ -238,7 +234,7 @@
     // real fornecido pela Vercel. Esta constante é apenas de apoio;
     // os metadados que valem para as prévias estão no <head>.
     // ============================================================
-    const SITE_URL = 'https://SEU-PROJETO.vercel.app';
+    const SITE_URL = 'https://livro-de-ordens.vercel.app';
 
     // Destino real do sistema (Google Apps Script).
     const DESTINO = 'https://script.google.com/macros/s/AKfycbzirl9IUQq7m2rYPLnPV3_J8Qz_SuGz0T5XtPBLLqomAVt-m5RnRWgeRlqh6j9X1qL9/exec';
