@@ -137,28 +137,6 @@
       line-height: 1.5;
     }
 
-    /* ===== Redirecionamento / carregando ===== */
-    .status {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin: 4px 0 20px;
-      color: var(--texto-suave);
-      font-size: 0.9rem;
-    }
-
-    .spinner {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 2px solid rgba(231, 198, 107, 0.25);
-      border-top-color: var(--dourado);
-      animation: girar 0.9s linear infinite;
-    }
-
-    @keyframes girar { to { transform: rotate(360deg); } }
-
     /* ===== Botão principal ===== */
     .botao {
       display: inline-block;
@@ -183,17 +161,8 @@
       outline-offset: 3px;
     }
 
-    .fallback {
-      margin: 18px auto 0;
-      max-width: 42ch;
-      font-size: 0.82rem;
-      color: rgba(184, 182, 194, 0.75);
-      line-height: 1.5;
-    }
-
     /* ===== Respeita usuários que preferem menos movimento ===== */
     @media (prefers-reduced-motion: reduce) {
-      .spinner { animation: none; }
       .botao { transition: none; }
     }
 
@@ -215,37 +184,11 @@
     <h1>Livro de Ordens CBMERJ</h1>
     <p class="subtitulo">TODAS AS PRINCIPAIS NOTAS E DETERMINAÇÕES CONFERIDAS DESDE 1985</p>
 
-    <p class="status" role="status">
-      <span class="spinner" aria-hidden="true"></span>
-      <span>Redirecionando para o sistema...</span>
-    </p>
-
-    <!-- Link real (funciona sem JavaScript) + acessibilidade -->
+    <!-- Link real do sistema (Google Apps Script) — funciona sem JavaScript -->
     <a id="acessar" class="botao" href="https://script.google.com/macros/s/AKfycbzirl9IUQq7m2rYPLnPV3_J8Qz_SuGz0T5XtPBLLqomAVt-m5RnRWgeRlqh6j9X1qL9/exec">
-      Acessar o Livro de Ordens
+      Clique aqui para acessar o Livro de Ordens
     </a>
-
-    <p class="fallback">Caso o redirecionamento não aconteça, clique no botão acima.</p>
   </main>
 
-  <script>
-    // ============================================================
-    // DEPOIS DO PRIMEIRO DEPLOY: troque a URL abaixo pelo domínio
-    // real fornecido pela Vercel. Esta constante é apenas de apoio;
-    // os metadados que valem para as prévias estão no <head>.
-    // ============================================================
-    const SITE_URL = 'https://livro-de-ordens.vercel.app';
-
-    // Destino real do sistema (Google Apps Script).
-    const DESTINO = 'https://script.google.com/macros/s/AKfycbzirl9IUQq7m2rYPLnPV3_J8Qz_SuGz0T5XtPBLLqomAVt-m5RnRWgeRlqh6j9X1qL9/exec';
-
-    // Redirecionamento automático após 2,5s, iniciado no DOMContentLoaded.
-    // Sem meta refresh: robôs de prévia (WhatsApp, Telegram, etc.) não são redirecionados.
-    document.addEventListener('DOMContentLoaded', function () {
-      setTimeout(function () {
-        window.location.replace(DESTINO);
-      }, 2500);
-    });
-  </script>
 </body>
 </html>
