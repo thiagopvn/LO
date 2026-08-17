@@ -69,8 +69,30 @@ Nada muda na planilha e a URL do sistema continua a mesma (o link do Vercel não
 
 Pronto: a URL `.../exec` continua idêntica, o link do Vercel segue funcionando.
 
-> Se criar uma implantação **nova** em vez de editar a existente, a URL muda e aí sim
-> você teria que atualizar o `index.html` do Vercel. Edite a existente.
+### A implantação certa é esta
+
+A implantação oficial — a que está no `index.html` do Vercel e em todo link já
+compartilhado — é a que começa com:
+
+```
+AKfycbzirl9IUQq7m2rYPLnPV3_J8Qz_SuGz0T5XtPBLLqomAVt-m5RnRWgeRlqh6j9X1qL9
+```
+
+**É essa que você edita.** Se clicar em "Nova implantação" em vez do lápis, o Google cria
+outra URL (foi o que aconteceu com a `AKfycbzLHpls…`): o código novo vai para um endereço
+que ninguém usa, e o site continua mostrando a versão velha. Quando isso acontecer:
+edite a implantação de cima para a versão nova e **arquive** a duplicada
+(⋮ ao lado dela → Arquivar).
+
+### Confira o acesso
+
+Ainda na janela de edição da implantação:
+
+- **Executar como:** `Eu` (para ler a planilha com a sua permissão);
+- **Quem pode acessar:** `Qualquer pessoa`.
+
+Implantação nova nasce com "Somente eu". Se ficar assim, todo mundo que abrir o link cai
+na tela de login do Google.
 
 ---
 
