@@ -15,12 +15,20 @@
     OBS: os metadados usam capa-og.jpg (versão leve, ~69 KB) porque o
     WhatsApp ignora imagens de prévia acima de ~300 KB. A capa grande
     (capa-livro-de-ordens.png) continua sendo exibida DENTRO da página.
+
+    O botão aponta para a implantação OFICIAL do Apps Script (a mesma desde
+    o início, já compartilhada por aí). Para publicar código novo, use
+    "Gerenciar implantações -> editar (lápis) -> Versão: Nova versão" NESSA
+    implantação: assim a URL não muda e nenhum link compartilhado quebra.
+    Criar uma implantação nova gera outra URL e obriga a trocar o endereço
+    aqui embaixo - evite.
     ============================================================
   -->
   <link rel="canonical" href="https://livro-de-ordens.vercel.app/">
 
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#0a0a0f">
+  <meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121210" media="(prefers-color-scheme: dark)">
 
   <!-- Open Graph -->
   <meta property="og:title" content="LIVRO DE ORDENS - TEN THIAGO SANTOS">
@@ -45,150 +53,227 @@
   <link rel="image_src" href="https://livro-de-ordens.vercel.app/capa-og.jpg">
 
   <style>
-    /* ===== Variáveis de tema ===== */
+    /* Mesma paleta e tipografia do sistema de consulta. */
     :root {
-      --preto:        #060608;
-      --grafite:      #0f0f16;
-      --grafite-2:    #171722;
-      --vermelho:     #c1121f; /* vermelho bombeiro */
-      --vermelho-viv: #e23241;
-      --dourado:      #e7c66b;
-      --dourado-esc:  #b8912f;
-      --texto:        #f2f0ea;
-      --texto-suave:  #b8b6c2;
-      --vidro:        rgba(20, 20, 30, 0.55);
-      --borda-vidro:  rgba(231, 198, 107, 0.22);
-      --raio:         20px;
-      --sombra:       0 30px 70px -20px rgba(0, 0, 0, 0.9);
+      --papel:       #f3f0e9;
+      --superficie:  #fffefb;
+      --tinta:       #1c1b18;
+      --tinta-2:     #4a4740;
+      --tinta-3:     #7d786d;
+      --linha:       #dbd5c7;
+      --linha-2:     #c3bba7;
+      --realce:      #8d1d14;
+      --realce-fundo:#7a1810;
+
+      --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+      --sans:  system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono:  "Consolas", "SFMono-Regular", ui-monospace, "Liberation Mono", monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --papel:       #121210;
+        --superficie:  #1a1a17;
+        --tinta:       #e9e5db;
+        --tinta-2:     #bdb8ac;
+        --tinta-3:     #8b8578;
+        --linha:       #2f2e29;
+        --linha-2:     #403e37;
+        --realce:      #c9463a;
+        --realce-fundo:#a8382e;
+      }
     }
 
     * { box-sizing: border-box; }
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      max-width: 100%;
-      overflow-x: hidden; /* sem rolagem horizontal */
-    }
+    html, body { margin: 0; padding: 0; max-width: 100%; overflow-x: hidden; }
 
     body {
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
-      color: var(--texto);
-      background:
-        radial-gradient(1200px 600px at 15% -10%, rgba(193, 18, 31, 0.35), transparent 60%),
-        radial-gradient(1000px 500px at 100% 110%, rgba(193, 18, 31, 0.20), transparent 55%),
-        radial-gradient(900px 700px at 85% 10%, rgba(231, 198, 107, 0.10), transparent 60%),
-        linear-gradient(160deg, var(--preto) 0%, var(--grafite) 55%, #0b0b12 100%);
+      background: var(--papel);
+      color: var(--tinta);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ===== Cartão de vidro escuro ===== */
-    .cartao {
-      width: 100%;
+    .faixa { height: 3px; background: var(--realce); }
+
+    .folha {
       max-width: 720px;
-      background: var(--vidro);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--borda-vidro);
-      border-radius: 28px;
-      box-shadow: var(--sombra), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      padding: 28px 28px 32px;
+      margin: 0 auto;
+      padding: 34px 22px 60px;
+    }
+
+    /* ---- cabeçalho ---- */
+
+    .cabecalho {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--linha);
+    }
+
+    .selo {
+      display: grid;
+      place-items: center;
+      width: 40px; height: 40px;
+      flex: none;
+      background: var(--realce);
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 15px; font-weight: 700; letter-spacing: .5px;
+    }
+
+    .titulo {
+      margin: 0;
+      font-size: clamp(1.15rem, 4.5vw, 1.45rem);
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      line-height: 1.15;
+    }
+
+    .orgao {
+      margin: 2px 0 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .06em;
+      color: var(--tinta-3);
+    }
+
+    /* ---- capa ---- */
+
+    .capa {
+      margin: 22px 0 0;
+      border: 1px solid var(--linha-2);
+      background: var(--superficie);
+      padding: 6px;
+    }
+
+    .capa img { display: block; width: 100%; height: auto; }
+
+    /* ---- texto ---- */
+
+    .chamada {
+      font-family: var(--serif);
+      font-size: clamp(1rem, 2.6vw, 1.12rem);
+      line-height: 1.55;
+      color: var(--tinta);
+      margin: 24px 0 0;
+    }
+
+    .conteudo {
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 8px;
+    }
+
+    .conteudo li {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--tinta-2);
+      border: 1px solid var(--linha-2);
+      padding: 3px 8px;
+    }
+
+    /* ---- botão ---- */
+
+    .acesso {
+      display: block;
+      margin: 28px 0 0;
+      padding: 16px 22px;
+      background: var(--realce);
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      border: 1px solid var(--realce-fundo);
+    }
+
+    .acesso:hover { background: var(--realce-fundo); }
+    .acesso:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; }
+
+    .aviso {
+      margin: 10px 0 0;
+      font-size: 12.5px;
+      color: var(--tinta-3);
       text-align: center;
     }
 
-    /* ===== Imagem de capa ===== */
-    .capa-wrap {
-      max-width: 640px;
-      margin: 0 auto 26px;
-      border-radius: var(--raio);
-      padding: 2px; /* espaço para borda vermelho + dourado */
-      background: linear-gradient(135deg, var(--vermelho) 0%, var(--dourado) 50%, var(--vermelho-viv) 100%);
-      box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.85), 0 0 40px -10px rgba(193, 18, 31, 0.45);
+    /* ---- rodapé ---- */
+
+    .rodape {
+      margin: 34px 0 0;
+      padding-top: 14px;
+      border-top: 1px solid var(--linha);
+      font-size: 12.5px;
+      color: var(--tinta-3);
+      line-height: 1.7;
     }
 
-    .capa {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-radius: calc(var(--raio) - 2px);
-      border: 1px solid rgba(0, 0, 0, 0.4);
-    }
-
-    /* ===== Textos ===== */
-    h1 {
-      margin: 6px 0 10px;
-      font-size: clamp(1.6rem, 5vw, 2.3rem);
-      letter-spacing: 0.5px;
-      background: linear-gradient(180deg, #fff 0%, var(--dourado) 130%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .subtitulo {
-      margin: 0 auto 22px;
-      max-width: 46ch;
-      color: var(--texto-suave);
-      font-size: clamp(0.95rem, 2.6vw, 1.05rem);
-      line-height: 1.5;
-    }
-
-    /* ===== Botão principal ===== */
-    .botao {
-      display: inline-block;
-      padding: 15px 30px;
-      border-radius: 14px;
-      font-size: 1.05rem;
-      font-weight: 700;
-      text-decoration: none;
-      color: #fff;
-      background: linear-gradient(135deg, var(--vermelho) 0%, var(--vermelho-viv) 100%);
-      border: 1px solid rgba(231, 198, 107, 0.55);
-      box-shadow: 0 14px 30px -10px rgba(193, 18, 31, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
-    }
-
-    .botao:hover { transform: translateY(-2px); filter: brightness(1.06); }
-    .botao:active { transform: translateY(0); }
-
-    /* foco visível para acessibilidade */
-    .botao:focus-visible {
-      outline: 3px solid var(--dourado);
-      outline-offset: 3px;
-    }
-
-    /* ===== Respeita usuários que preferem menos movimento ===== */
-    @media (prefers-reduced-motion: reduce) {
-      .botao { transition: none; }
-    }
+    .rodape b { color: var(--tinta-2); font-weight: 600; }
 
     @media (max-width: 480px) {
-      .cartao { padding: 20px 16px 24px; border-radius: 22px; }
+      .folha { padding: 26px 16px 46px; }
+      .capa { padding: 4px; }
     }
   </style>
 </head>
 <body>
-  <main class="cartao">
-    <div class="capa-wrap">
+  <div class="faixa"></div>
+
+  <main class="folha">
+    <header class="cabecalho">
+      <span class="selo" aria-hidden="true">LO</span>
+      <div>
+        <h1 class="titulo">Livro de Ordens</h1>
+        <p class="orgao">CBMERJ &middot; GOCG</p>
+      </div>
+    </header>
+
+    <figure class="capa">
       <img
-        class="capa"
         src="capa-livro-de-ordens.png"
         alt="Capa do Livro de Ordens CBMERJ — brasão do Grupamento Operacional do Comando Geral"
         width="3168" height="1344">
-    </div>
+    </figure>
 
-    <h1>Livro de Ordens CBMERJ</h1>
-    <p class="subtitulo">TODAS AS PRINCIPAIS NOTAS E DETERMINAÇÕES CONFERIDAS DESDE 1985</p>
+    <p class="chamada">
+      Todas as principais notas e determinações conferidas desde 1985, reunidas em um
+      único lugar e pesquisáveis por nome, número do boletim, data ou assunto.
+    </p>
+
+    <ul class="conteudo">
+      <li>Livro de ordens</li>
+      <li>Manuais</li>
+      <li>POP</li>
+      <li>Leis e regulamentos</li>
+      <li>Jurisprudência</li>
+      <li>Obras públicas</li>
+    </ul>
 
     <!-- Link real do sistema (Google Apps Script) — funciona sem JavaScript -->
-    <a id="acessar" class="botao" href="https://script.google.com/macros/s/AKfycbzirl9IUQq7m2rYPLnPV3_J8Qz_SuGz0T5XtPBLLqomAVt-m5RnRWgeRlqh6j9X1qL9/exec">
-      Clique aqui para acessar o Livro de Ordens
+    <a id="acessar" class="acesso"
+       href="https://script.google.com/macros/s/AKfycbzirl9IUQq7m2rYPLnPV3_J8Qz_SuGz0T5XtPBLLqomAVt-m5RnRWgeRlqh6j9X1qL9/exec">
+      Abrir o sistema de consulta
     </a>
-  </main>
+    <p class="aviso">Abre no Google Apps Script. Não é preciso instalar nada.</p>
 
+    <footer class="rodape">
+      Conferência, organização e manutenção: <b>2º Ten Thiago Santos</b> — GOCG.<br>
+      Uso interno. Em caso de divergência, prevalece o texto publicado em boletim.
+    </footer>
+  </main>
 </body>
 </html>

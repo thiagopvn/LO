@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Livro de Ordens - CBMERJ</title>
+<style>
+/* ------------------------------------------------------------------
+   Livro de Ordens - GOCG
+   Folha unica. Tipografia: serifa para o titulo do documento (e o que
+   se le), sem serifa para a interface, monoespacada para numeros.
+   ------------------------------------------------------------------ */
+
+:root{
+  --papel:#f3f0e9;
+  --superficie:#fffefb;
+  --superficie-2:#eeeae1;
+  --tinta:#1c1b18;
+  --tinta-2:#4a4740;
+  --tinta-3:#7d786d;
+  --linha:#dbd5c7;
+  --linha-2:#c3bba7;
+  --realce:#8d1d14;
+  --realce-2:#b7392c;
+  --marca:#f7e7a6;
+  --foco:#1c5fa8;
+
+  --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+  --sans:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"Consolas","SFMono-Regular",ui-monospace,"Liberation Mono",monospace;
+}
+
+html[data-tema="escuro"]{
+  --papel:#121210;
+  --superficie:#1a1a17;
+  --superficie-2:#232320;
+  --tinta:#e9e5db;
+  --tinta-2:#bdb8ac;
+  --tinta-3:#8b8578;
+  --linha:#2f2e29;
+  --linha-2:#403e37;
+  --realce:#e0574a;
+  --realce-2:#f07a6c;
+  --marca:#5c4a17;
+  --foco:#6fa8dc;
+}
+
+*{box-sizing:border-box}
+
+html,body{margin:0;padding:0}
+
+body{
+  background:var(--papel);
+  color:var(--tinta);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+
+a{color:inherit}
+
+.sr{
+  position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+.pular{
+  position:absolute;left:-999px;top:0;z-index:50;
+  background:var(--realce);color:#fff;padding:8px 14px;
+}
+.pular:focus{left:8px;top:8px}
+
+:focus-visible{outline:2px solid var(--foco);outline-offset:2px}
+
+/* ---------------- faixa e cabecalho ---------------- */
+
+.faixa{height:3px;background:var(--realce)}
+
+.topo{
+  position:sticky;top:0;z-index:20;
+  background:var(--superficie);
+  border-bottom:1px solid var(--linha-2);
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:20px;
+  padding:10px 22px;
+}
+
+.marca{display:flex;align-items:center;gap:10px;min-width:0}
+
+.marca__selo{
+  display:grid;place-items:center;
+  width:34px;height:34px;
+  background:var(--realce);color:#fff;
+  font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.5px;
+}
+
+.marca__nome{
+  font-weight:700;font-size:14px;letter-spacing:.14em;text-transform:uppercase;
+  display:block;line-height:1.2;
+}
+.marca__sub{
+  display:block;font-size:11.5px;color:var(--tinta-3);
+  letter-spacing:.04em;line-height:1.3;
+}
+
+.busca{position:relative;display:flex;align-items:center;max-width:620px;width:100%;justify-self:center}
+
+.busca input{
+  width:100%;
+  font:inherit;font-size:15px;
+  color:var(--tinta);
+  background:var(--papel);
+  border:1px solid var(--linha-2);
+  border-radius:2px;
+  padding:9px 82px 9px 34px;
+}
+.busca input::placeholder{color:var(--tinta-3)}
+.busca input:focus{border-color:var(--realce);outline:none;background:var(--superficie)}
+.busca input::-webkit-search-cancel-button{display:none}
+
+.busca__lupa{
+  position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  width:15px;height:15px;color:var(--tinta-3);pointer-events:none;
+}
+
+.busca__atalho{
+  position:absolute;right:10px;
+  font-family:var(--mono);font-size:11px;color:var(--tinta-3);
+  border:1px solid var(--linha-2);border-radius:2px;
+  padding:1px 6px;background:var(--superficie);
+}
+
+.busca__limpar{
+  position:absolute;right:8px;
+  font:inherit;font-size:12px;color:var(--tinta-2);
+  background:var(--superficie-2);border:1px solid var(--linha-2);border-radius:2px;
+  padding:3px 9px;cursor:pointer;
+}
+.busca__limpar:hover{color:var(--realce);border-color:var(--realce)}
+
+.topo__acoes{display:flex;align-items:center;gap:6px}
+
+.botao-simples{
+  font:inherit;font-size:12px;
+  color:var(--tinta-2);background:transparent;
+  border:1px solid var(--linha-2);border-radius:2px;
+  padding:6px 10px;cursor:pointer;white-space:nowrap;
+}
+.botao-simples:hover{border-color:var(--realce);color:var(--realce)}
+
+/* ---------------- estrutura ---------------- */
+
+.corpo{
+  display:grid;
+  grid-template-columns:236px minmax(0,1fr);
+  max-width:1200px;
+  margin:0 auto;
+  align-items:start;
+}
+
+.acervo{
+  position:sticky;top:57px;
+  border-right:1px solid var(--linha);
+  padding:22px 0 30px;
+  max-height:calc(100vh - 57px);
+  overflow:auto;
+}
+
+.acervo__titulo{
+  font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--tinta-3);padding:0 22px 8px;margin:0;font-weight:700;
+}
+
+.aba{
+  display:flex;align-items:baseline;gap:8px;width:100%;
+  font:inherit;font-size:13.5px;text-align:left;
+  color:var(--tinta-2);background:transparent;border:0;
+  border-left:3px solid transparent;
+  padding:7px 18px 7px 19px;cursor:pointer;
+}
+.aba:hover{background:var(--superficie-2);color:var(--tinta)}
+.aba[aria-current="true"]{
+  border-left-color:var(--realce);
+  color:var(--tinta);font-weight:600;background:var(--superficie);
+}
+.aba__nome{flex:1;min-width:0}
+.aba__qtd{font-family:var(--mono);font-size:11.5px;color:var(--tinta-3)}
+.aba[aria-current="true"] .aba__qtd{color:var(--realce)}
+
+.acervo__divisor{border:0;border-top:1px solid var(--linha);margin:10px 22px}
+
+.acervo__rodape{padding:4px 22px 0;font-size:11.5px;color:var(--tinta-3);line-height:1.6}
+.acervo__rodape a{color:var(--tinta-3)}
+.acervo__rodape a:hover{color:var(--realce)}
+
+.painel{padding:22px 26px 60px;min-width:0}
+
+/* ---------------- cabecalho da secao ---------------- */
+
+.secao__titulo{
+  font-family:var(--sans);
+  font-size:19px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  margin:0 0 4px;
+}
+
+.secao__linha{
+  font-size:12.5px;color:var(--tinta-3);margin:0;
+  display:flex;flex-wrap:wrap;gap:6px 14px;
+}
+.secao__linha b{font-family:var(--mono);font-weight:600;color:var(--tinta-2)}
+
+.escopo{
+  margin:12px 0 0;padding:8px 12px;
+  background:var(--superficie);border:1px solid var(--linha);border-left:3px solid var(--realce);
+  font-size:12.5px;color:var(--tinta-2);
+}
+.escopo button{
+  font:inherit;font-size:12.5px;color:var(--realce);
+  background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;
+}
+
+.distribuicao{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0}
+.distribuicao button{
+  font:inherit;font-size:12px;
+  background:var(--superficie);color:var(--tinta-2);
+  border:1px solid var(--linha-2);border-radius:2px;
+  padding:4px 9px;cursor:pointer;
+}
+.distribuicao button:hover{border-color:var(--realce);color:var(--realce)}
+.distribuicao b{font-family:var(--mono);font-weight:600}
+
+/* ---------------- filtros ---------------- */
+
+.filtros{
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;
+  margin:16px 0 0;padding:12px 14px;
+  background:var(--superficie);border:1px solid var(--linha);
+}
+
+.campo{display:flex;flex-direction:column;gap:4px}
+.campo label{
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-3);font-weight:700;
+}
+.campo select{
+  font:inherit;font-size:13px;color:var(--tinta);
+  background:var(--papel);border:1px solid var(--linha-2);border-radius:2px;
+  padding:5px 8px;min-width:130px;
+}
+.campo select:focus{border-color:var(--realce);outline:none}
+
+.filtros__limpar{margin-left:auto}
+
+/* ---------------- lista ---------------- */
+
+.contagem{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  margin:22px 0 0;padding-bottom:6px;
+  border-bottom:1px solid var(--linha-2);
+  font-size:12px;color:var(--tinta-3);letter-spacing:.04em;text-transform:uppercase;
+}
+.contagem b{font-family:var(--mono);color:var(--tinta-2);font-weight:600}
+
+.lista{list-style:none;margin:0;padding:0;counter-reset:doc}
+
+.doc{border-bottom:1px solid var(--linha);counter-increment:doc}
+
+.doc__link{
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr);
+  gap:0 14px;
+  padding:12px 12px 13px 8px;
+  text-decoration:none;color:inherit;
+  border-left:3px solid transparent;
+  margin-left:-3px;
+}
+a.doc__link:hover{background:var(--superficie);border-left-color:var(--realce)}
+.doc.selecionado .doc__link{background:var(--superficie);border-left-color:var(--realce)}
+.doc__link:focus-visible{background:var(--superficie)}
+
+.doc__num{
+  grid-row:1 / span 2;
+  font-family:var(--mono);font-size:11px;color:var(--tinta-3);
+  padding-top:3px;text-align:right;
+}
+.doc__num::before{content:counter(doc,decimal-leading-zero)}
+
+.doc__meta{
+  display:flex;flex-wrap:wrap;align-items:center;gap:5px 10px;
+  font-family:var(--mono);font-size:11px;color:var(--tinta-3);
+  letter-spacing:.02em;margin-bottom:3px;
+}
+.doc__meta .aba-etiqueta{color:var(--realce);font-weight:700;letter-spacing:.06em}
+.doc__meta .separador{color:var(--linha-2)}
+
+.doc__tag{
+  font-size:10px;letter-spacing:.08em;
+  border:1px solid var(--linha-2);border-radius:2px;
+  padding:1px 5px;color:var(--tinta-2);
+}
+
+.doc__titulo{
+  font-family:var(--serif);
+  font-size:15.5px;line-height:1.4;color:var(--tinta);
+}
+a.doc__link:hover .doc__titulo{text-decoration:underline;text-underline-offset:2px}
+
+.doc__titulo mark{
+  background:var(--marca);color:inherit;
+  padding:0 1px;border-radius:1px;
+}
+
+.doc--sem-link .doc__titulo{color:var(--tinta-2)}
+.doc__aviso{
+  font-family:var(--mono);font-size:10.5px;color:var(--tinta-3);
+  border:1px dashed var(--linha-2);padding:0 4px;
+}
+
+.vazio{
+  border:1px solid var(--linha);background:var(--superficie);
+  padding:26px 22px;margin-top:22px;
+}
+.vazio h2{margin:0 0 6px;font-size:15px;letter-spacing:.06em;text-transform:uppercase}
+.vazio p{margin:0 0 4px;color:var(--tinta-2);font-size:13.5px}
+.vazio button{
+  font:inherit;font-size:13.5px;color:var(--realce);
+  background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;
+}
+
+.mais{
+  display:block;width:100%;
+  font:inherit;font-size:13px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--tinta-2);background:var(--superficie);
+  border:1px solid var(--linha-2);border-radius:2px;
+  padding:11px;margin-top:18px;cursor:pointer;
+}
+.mais:hover{border-color:var(--realce);color:var(--realce)}
+
+.rodape{
+  border-top:1px solid var(--linha);
+  padding:14px 26px 40px;
+  font-size:11.5px;color:var(--tinta-3);
+  display:flex;flex-wrap:wrap;gap:6px 18px;
+  max-width:1200px;margin:0 auto;
+}
+.rodape a{color:var(--tinta-3)}
+.rodape a:hover{color:var(--realce)}
+.rodape button{
+  font:inherit;font-size:11.5px;color:var(--tinta-3);
+  background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;
+}
+.rodape button:hover{color:var(--realce)}
+
+/* ---------------- telas estreitas ---------------- */
+
+@media (max-width:900px){
+  .topo{
+    grid-template-columns:1fr auto;
+    grid-template-areas:"marca acoes" "busca busca";
+    gap:10px 12px;padding:10px 16px;
+  }
+  .marca{grid-area:marca}
+  .topo__acoes{grid-area:acoes}
+  .busca{grid-area:busca;max-width:none}
+
+  .corpo{grid-template-columns:1fr}
+
+  .acervo{
+    position:static;max-height:none;overflow:visible;
+    border-right:0;border-bottom:1px solid var(--linha);
+    padding:12px 0;
+  }
+  .acervo__titulo{padding:0 16px 6px}
+  .acervo__lista{display:flex;overflow-x:auto;gap:0;padding:0 10px;scrollbar-width:thin}
+  .aba{
+    width:auto;white-space:nowrap;
+    border-left:0;border-bottom:3px solid transparent;
+    padding:6px 12px;
+  }
+  .aba[aria-current="true"]{border-left:0;border-bottom-color:var(--realce)}
+  .acervo__divisor,.acervo__rodape{display:none}
+
+  .painel{padding:18px 16px 50px}
+  .doc__link{grid-template-columns:minmax(0,1fr);padding-left:10px}
+  .doc__num{display:none}
+  .filtros{gap:10px}
+  .campo select{min-width:0;width:100%}
+  .campo{flex:1 1 140px}
+}
+
+/* ---------------- impressao ---------------- */
+
+@media print{
+  .topo,.acervo,.filtros,.mais,.rodape,.escopo,.distribuicao,.faixa{display:none !important}
+  body{background:#fff;color:#000;font-size:11pt}
+  .corpo{display:block}
+  .painel{padding:0}
+  .doc{break-inside:avoid;border-bottom:1px solid #ccc}
+  .doc__titulo{font-size:11pt}
+  .doc__titulo mark{background:none;font-weight:700}
+}
+</style>
+</head>
+
+<body>
+<a class="pular" href="#lista">Ir direto para a lista</a>
+<div class="faixa"></div>
+
+<header class="topo">
+  <div class="marca">
+    <span class="marca__selo" aria-hidden="true">LO</span>
+    <span>
+      <span class="marca__nome">Livro de Ordens</span>
+      <span class="marca__sub">GOCG &middot; 2&ordm; Ten Thiago Santos</span>
+    </span>
+  </div>
+
+  <div class="busca" role="search">
+    <svg class="busca__lupa" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <circle cx="7" cy="7" r="4.6"></circle><path d="M10.5 10.5 L14.5 14.5"></path>
+    </svg>
+    <label class="sr" for="q">Buscar documento</label>
+    <input id="q" type="search" autocomplete="off" autocorrect="off" spellcheck="false"
+           placeholder="Buscar por palavra, n&ordm; do boletim, ano...">
+    <kbd class="busca__atalho" id="atalho">barra /</kbd>
+    <button class="busca__limpar" id="limpar" type="button" hidden>limpar</button>
+  </div>
+
+  <div class="topo__acoes">
+    <button class="botao-simples" id="tema" type="button">Modo escuro</button>
+  </div>
+</header>
+
+<div class="corpo">
+  <nav class="acervo" aria-label="Abas da planilha">
+    <h2 class="acervo__titulo">Acervo</h2>
+    <div class="acervo__lista" id="navAbas"></div>
+    <hr class="acervo__divisor">
+    <div class="acervo__rodape">
+      <span id="atualizado"></span><br>
+      <a id="linkPlanilha" href="#" target="_blank" rel="noopener">Abrir planilha de origem</a>
+    </div>
+  </nav>
+
+  <main class="painel">
+    <h1 class="secao__titulo" id="tituloSecao">Acervo completo</h1>
+    <p class="secao__linha" id="linhaSecao"></p>
+
+    <div id="escopo" class="escopo" hidden></div>
+    <div id="distribuicao" class="distribuicao" hidden></div>
+
+    <div class="filtros" id="filtros"></div>
+
+    <div class="contagem" id="contagem"></div>
+
+    <ol class="lista" id="lista"></ol>
+
+    <div id="vazio" hidden></div>
+    <button class="mais" id="mais" type="button" hidden></button>
+  </main>
+</div>
+
+<footer class="rodape">
+  <span>Fonte: planilha <b>LIVRO DE ORDENS</b> &mdash; conferida pelo 2&ordm; Ten Thiago Santos.</span>
+  <span id="rodapeAtualizado"></span>
+  <button id="recarregar" type="button">Reler a planilha agora</button>
+</footer>
+
+<script>
+var ACERVO = <?!= dadosJSON ?>;
+
+(function () {
+'use strict';
+
+/* ------------------------------------------------------------------
+   Dados
+   ------------------------------------------------------------------ */
+
+var COLECOES  = ACERVO.colecoes || [];
+var REGISTROS = ACERVO.registros || [];
+var LOTE = 60;
+
+var estado = {
+  aba: 'todas',        // 'todas' ou id numerico da colecao
+  termo: '',
+  ordem: 'auto',
+  filtros: {},         // ano / interesse / tipo, so quando a aba esta selecionada
+  visiveis: LOTE,
+  resultados: [],
+  foco: -1
+};
+
+/* ------------------------------------------------------------------
+   Texto: normalizacao e realce
+   ------------------------------------------------------------------ */
+
+function normalizar(texto) {
+  return String(texto || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+
+// prepara o texto pesquisavel de cada registro uma unica vez
+REGISTROS.forEach(function (reg, i) {
+  var colecao = COLECOES[reg.c] || { nome: '' };
+  var pedacos = [reg.t, colecao.nome];
+  if (reg.b) pedacos.push('bol ' + reg.b, 'boletim ' + reg.b);
+  if (reg.d) pedacos.push(reg.d);
+  if (reg.a) pedacos.push(reg.a);
+  if (reg.i) pedacos.push(reg.i);
+  if (reg.p) pedacos.push(reg.p);
+
+  reg._i = i;
+  reg._t = normalizar(reg.t);
+  reg._todos = normalizar(pedacos.join(' '));
+  reg._ordem = reg.s || 0;
+});
+
+var ACENTOS = {
+  a: 'aàáâãä', e: 'eèéêë',
+  i: 'iìíîï', o: 'oòóôõö',
+  u: 'uùúûü', c: 'cç', n: 'nñ'
+};
+
+function escaparRegex(texto) {
+  return texto.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// monta um padrao que casa com o texto original, com ou sem acento
+function padraoDoTermo(termo) {
+  return termo.split('').map(function (letra) {
+    if (ACENTOS[letra]) return '[' + ACENTOS[letra] + ACENTOS[letra].toUpperCase() + ']';
+    return escaparRegex(letra);
+  }).join('');
+}
+
+function escaparHTML(texto) {
+  return String(texto)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function realcar(titulo, termos) {
+  var html = escaparHTML(titulo);
+  if (!termos.length) return html;
+
+  // nao pinta "de", "do", "e"... so atrapalha a leitura do titulo
+  var uteis = termos.filter(function (termo) {
+    return termo.length >= 3 || /^\d+$/.test(termo);
+  });
+
+  var padrao = uteis.map(padraoDoTermo).join('|');
+  if (!padrao) return html;
+
+  try {
+    return html.replace(new RegExp('(' + padrao + ')', 'gi'), '<mark>$1</mark>');
+  } catch (erro) {
+    return html;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Consulta
+   ------------------------------------------------------------------ */
+
+// aceita: palavras soltas, "expressao entre aspas", numeros de boletim e anos
+function interpretar(entrada) {
+  var texto = normalizar(entrada).trim();
+  var termos = [];
+  var frases = [];
+
+  texto.replace(/"([^"]+)"/g, function (tudo, frase) {
+    frases.push(frase.trim());
+    return ' ';
+  }).split(/\s+/).forEach(function (palavra) {
+    if (palavra) termos.push(palavra);
+  });
+
+  return { termos: termos, frases: frases, todos: frases.concat(termos) };
+}
+
+function combina(reg, consulta) {
+  var i;
+  for (i = 0; i < consulta.frases.length; i++) {
+    if (reg._todos.indexOf(consulta.frases[i]) < 0) return false;
+  }
+  for (i = 0; i < consulta.termos.length; i++) {
+    if (reg._todos.indexOf(consulta.termos[i]) < 0) return false;
+  }
+  return true;
+}
+
+// pontuacao interna: define a ordem por relevancia e nunca aparece na tela
+function pontuar(reg, consulta) {
+  var pontos = 0;
+
+  consulta.frases.forEach(function (frase) {
+    if (reg._t.indexOf(frase) === 0) pontos += 90;
+    else if (reg._t.indexOf(frase) >= 0) pontos += 55;
+  });
+
+  consulta.termos.forEach(function (termo) {
+    var posicao = reg._t.indexOf(termo);
+    if (posicao === 0) pontos += 40;
+    else if (posicao > 0) {
+      pontos += 20;
+      if (/[\s\-\/(]/.test(reg._t.charAt(posicao - 1))) pontos += 12;   // inicio de palavra
+    } else {
+      pontos += 5;   // achou so nos dados de apoio (aba, interesse, data...)
+    }
+
+    if (/^\d+$/.test(termo)) {
+      if (reg.b && String(reg.b) === termo) pontos += 60;               // nº do boletim exato
+      if (reg.a && String(reg.a) === termo) pontos += 25;               // ano exato
+    }
+  });
+
+  if (reg._ordem) pontos += reg._ordem / 1e13;   // desempate: mais recente na frente
+  return pontos;
+}
+
+function filtrosAtivos() {
+  return Object.keys(estado.filtros).some(function (chave) {
+    return estado.filtros[chave];
+  });
+}
+
+function consultar() {
+  var consulta = interpretar(estado.termo);
+  var buscando = consulta.todos.length > 0;
+  var abaAtual = estado.aba;
+
+  var lista = REGISTROS.filter(function (reg) {
+    if (abaAtual !== 'todas' && reg.c !== abaAtual) return false;
+    if (estado.filtros.ano && String(reg.a || '') !== estado.filtros.ano) return false;
+    if (estado.filtros.interesse && !(reg.i || '').split('/').some(function (v) {
+      return v.trim() === estado.filtros.interesse;
+    })) return false;
+    if (estado.filtros.tipo && (reg.p || '') !== estado.filtros.tipo) return false;
+    if (buscando && !combina(reg, consulta)) return false;
+    return true;
+  });
+
+  var ordem = estado.ordem;
+  if (ordem === 'auto') ordem = buscando ? 'relevancia' : 'recentes';
+  if (ordem === 'relevancia' && !buscando) ordem = 'recentes';
+
+  if (ordem === 'relevancia' && buscando) {
+    lista.forEach(function (reg) { reg._pontos = pontuar(reg, consulta); });
+    lista.sort(function (a, b) { return b._pontos - a._pontos || a._i - b._i; });
+  } else if (ordem === 'recentes') {
+    lista.sort(function (a, b) { return (b._ordem - a._ordem) || (a._i - b._i); });
+  } else if (ordem === 'antigos') {
+    lista.sort(function (a, b) { return (a._ordem - b._ordem) || (a._i - b._i); });
+  } else if (ordem === 'az') {
+    lista.sort(function (a, b) { return a._t < b._t ? -1 : a._t > b._t ? 1 : 0; });
+  }
+
+  return { lista: lista, consulta: consulta, buscando: buscando, ordem: ordem };
+}
+
+/* ------------------------------------------------------------------
+   Desenho da tela
+   ------------------------------------------------------------------ */
+
+var el = {};
+['q','limpar','atalho','tema','navAbas','tituloSecao','linhaSecao','escopo','distribuicao',
+ 'filtros','contagem','lista','vazio','mais','atualizado','linkPlanilha','rodapeAtualizado',
+ 'recarregar'].forEach(function (id) { el[id] = document.getElementById(id); });
+
+function plural(n, singular, pluralPalavra) {
+  return n.toLocaleString('pt-BR') + ' ' + (n === 1 ? singular : pluralPalavra);
+}
+
+function desenharAbas() {
+  var html = '<button class="aba" data-aba="todas" aria-current="' + (estado.aba === 'todas') + '">' +
+             '<span class="aba__nome">Todas as abas</span>' +
+             '<span class="aba__qtd">' + REGISTROS.length.toLocaleString('pt-BR') + '</span></button>';
+
+  COLECOES.forEach(function (colecao) {
+    html += '<button class="aba" data-aba="' + colecao.id + '" aria-current="' + (estado.aba === colecao.id) + '">' +
+            '<span class="aba__nome">' + escaparHTML(nomeCurto(colecao.nome)) + '</span>' +
+            '<span class="aba__qtd">' + colecao.total.toLocaleString('pt-BR') + '</span></button>';
+  });
+
+  el.navAbas.innerHTML = html;
+}
+
+// os nomes das abas sao longos; encurta so na navegacao lateral
+function nomeCurto(nome) {
+  var curtos = {
+    'PROCEDIMENTO OPERACIONAL PADRAO': 'POP',
+    'PROCEDIMENTO OPERACIONAL PADRÃO': 'POP',
+    'NORMATIVO DE OBRAS PUBLICAS': 'Obras públicas',
+    'NORMATIVO DE OBRAS PÚBLICAS': 'Obras públicas'
+  };
+  if (curtos[nome]) return curtos[nome];
+  return nome.charAt(0) + nome.slice(1).toLowerCase();
+}
+
+function valoresDe(campo, colecaoId) {
+  var vistos = {};
+  REGISTROS.forEach(function (reg) {
+    if (colecaoId !== 'todas' && reg.c !== colecaoId) return;
+    var valor = reg[campo];
+    if (!valor) return;
+    if (campo === 'i') {
+      String(valor).split('/').forEach(function (parte) {
+        parte = parte.trim();
+        if (parte) vistos[parte] = true;
+      });
+    } else {
+      vistos[String(valor)] = true;
+    }
+  });
+  return Object.keys(vistos);
+}
+
+function desenharFiltros(resultado) {
+  var colecao = estado.aba === 'todas' ? null : COLECOES[estado.aba];
+  var campos = colecao ? colecao.campos : [];
+  var html = '';
+
+  if (colecao && (campos.indexOf('data') >= 0 || campos.indexOf('ano') >= 0)) {
+    var anos = valoresDe('a', estado.aba).sort(function (a, b) { return b - a; });
+    html += campoSelect('ano', 'Ano', anos, estado.filtros.ano, 'Todos os anos');
+  }
+
+  if (colecao && campos.indexOf('interesse') >= 0) {
+    var interesses = valoresDe('i', estado.aba).sort();
+    html += campoSelect('interesse', 'Interesse', interesses, estado.filtros.interesse, 'Todos');
+  }
+
+  if (colecao && campos.indexOf('tipo') >= 0) {
+    var tipos = valoresDe('p', estado.aba).sort();
+    html += campoSelect('tipo', 'Tipo', tipos, estado.filtros.tipo, 'Todos os tipos');
+  }
+
+  var ordens = [];
+  if (resultado.buscando) ordens.push(['relevancia', 'Relevância']);
+  ordens.push(['recentes', 'Mais recentes'], ['antigos', 'Mais antigos'], ['az', 'Ordem alfabética']);
+
+  html += '<div class="campo"><label for="f-ordem">Ordenar</label><select id="f-ordem" data-filtro="ordem">' +
+    ordens.map(function (par) {
+      return '<option value="' + par[0] + '"' + (resultado.ordem === par[0] ? ' selected' : '') + '>' +
+             par[1] + '</option>';
+    }).join('') + '</select></div>';
+
+  if (filtrosAtivos() || estado.ordem !== 'auto') {
+    html += '<button class="botao-simples filtros__limpar" id="zerarFiltros" type="button">Limpar filtros</button>';
+  }
+
+  el.filtros.innerHTML = html;
+  el.filtros.hidden = !html;
+}
+
+function campoSelect(chave, rotulo, valores, selecionado, textoTodos) {
+  if (!valores.length) return '';
+  var html = '<div class="campo"><label for="f-' + chave + '">' + rotulo + '</label>' +
+             '<select id="f-' + chave + '" data-filtro="' + chave + '">' +
+             '<option value="">' + textoTodos + '</option>';
+  valores.forEach(function (valor) {
+    html += '<option value="' + escaparHTML(valor) + '"' +
+            (selecionado === valor ? ' selected' : '') + '>' + escaparHTML(valor) + '</option>';
+  });
+  return html + '</select></div>';
+}
+
+function desenharCabecalho(resultado) {
+  var colecao = estado.aba === 'todas' ? null : COLECOES[estado.aba];
+
+  el.tituloSecao.textContent = colecao ? colecao.nome : 'Acervo completo';
+
+  var partes = [];
+  if (colecao) {
+    partes.push('<b>' + colecao.total.toLocaleString('pt-BR') + '</b> registros nesta aba');
+    if (colecao.conferido) partes.push('conferida até <b>' + escaparHTML(colecao.conferido) + '</b>');
+    if (colecao.semLink) partes.push('<b>' + colecao.semLink + '</b> sem link cadastrado');
+  } else {
+    partes.push('<b>' + REGISTROS.length.toLocaleString('pt-BR') + '</b> registros');
+    partes.push('<b>' + COLECOES.length + '</b> abas');
+    var comBoletim = COLECOES.filter(function (c) { return c.conferido; })[0];
+    if (comBoletim) partes.push('livro conferido até <b>' + escaparHTML(comBoletim.conferido) + '</b>');
+  }
+  el.linhaSecao.innerHTML = partes.join('<span aria-hidden="true">&middot;</span>');
+
+  // aviso de escopo: a duvida "estou procurando onde?" tem que morrer aqui
+  if (resultado.buscando && colecao) {
+    var total = REGISTROS.filter(function (reg) {
+      return combina(reg, resultado.consulta);
+    }).length;
+    var fora = total - resultado.lista.length;
+    el.escopo.hidden = false;
+    el.escopo.innerHTML = 'Buscando apenas em <b>' + escaparHTML(colecao.nome) + '</b>.' +
+      (fora > 0 ? ' Há mais <b>' + fora + '</b> nas outras abas. ' : ' ') +
+      '<button type="button" id="irTodas">Buscar em todas as abas</button>';
+  } else {
+    el.escopo.hidden = true;
+    el.escopo.innerHTML = '';
+  }
+
+  // quando a busca e geral, mostra de onde vem cada resultado
+  if (resultado.buscando && !colecao && resultado.lista.length) {
+    var contagens = {};
+    resultado.lista.forEach(function (reg) { contagens[reg.c] = (contagens[reg.c] || 0) + 1; });
+
+    var botoes = COLECOES.filter(function (c) { return contagens[c.id]; })
+      .sort(function (a, b) { return contagens[b.id] - contagens[a.id]; })
+      .map(function (c) {
+        return '<button type="button" data-aba="' + c.id + '">' +
+               escaparHTML(nomeCurto(c.nome)) + ' <b>' + contagens[c.id] + '</b></button>';
+      }).join('');
+
+    el.distribuicao.hidden = false;
+    el.distribuicao.innerHTML = botoes;
+  } else {
+    el.distribuicao.hidden = true;
+    el.distribuicao.innerHTML = '';
+  }
+}
+
+function desenharLista(resultado) {
+  var lista = resultado.lista;
+  var mostrar = Math.min(estado.visiveis, lista.length);
+
+  var nomesOrdem = {
+    relevancia: 'relevância', recentes: 'mais recentes primeiro',
+    antigos: 'mais antigos primeiro', az: 'ordem alfabética'
+  };
+
+  el.contagem.innerHTML =
+    '<span><b>' + lista.length.toLocaleString('pt-BR') + '</b> ' +
+    (lista.length === 1 ? 'documento' : 'documentos') +
+    (resultado.buscando ? ' para "' + escaparHTML(estado.termo.trim()) + '"' : '') + '</span>' +
+    '<span>' + (nomesOrdem[resultado.ordem] || '') + '</span>';
+  el.contagem.hidden = false;
+
+  var fragmento = document.createDocumentFragment();
+  var termos = resultado.buscando ? resultado.consulta.todos : [];
+
+  for (var n = 0; n < mostrar; n++) {
+    fragmento.appendChild(linhaDocumento(lista[n], termos));
+  }
+
+  el.lista.innerHTML = '';
+  el.lista.appendChild(fragmento);
+
+  if (!lista.length) {
+    el.contagem.hidden = true;
+    el.vazio.hidden = false;
+    el.vazio.className = 'vazio';
+    el.vazio.innerHTML =
+      '<h2>Nenhum documento encontrado</h2>' +
+      '<p>Nada corresponde a <b>' + escaparHTML(estado.termo.trim() || '(sem termo)') + '</b>' +
+      (estado.aba === 'todas' ? '' : ' em ' + escaparHTML(COLECOES[estado.aba].nome)) +
+      (filtrosAtivos() ? ' com os filtros aplicados' : '') + '.</p>' +
+      '<p>Tente menos palavras, o número do boletim ou ' +
+      '<button type="button" id="ampliar">buscar em todas as abas sem filtro</button>.</p>';
+  } else {
+    el.vazio.hidden = true;
+    el.vazio.innerHTML = '';
+  }
+
+  var restam = lista.length - mostrar;
+  el.mais.hidden = restam <= 0;
+  if (restam > 0) {
+    el.mais.textContent = 'Mostrar mais ' + Math.min(LOTE, restam) + ' (' + restam + ' restantes)';
+  }
+}
+
+function linhaDocumento(reg, termos) {
+  var colecao = COLECOES[reg.c] || { nome: '' };
+  var item = document.createElement('li');
+  item.className = 'doc' + (reg.u ? '' : ' doc--sem-link');
+  item.dataset.indice = reg._i;
+
+  var meta = [];
+  if (estado.aba === 'todas') meta.push('<span class="aba-etiqueta">' + escaparHTML(nomeCurto(colecao.nome)) + '</span>');
+  if (reg.b) meta.push('Bol. ' + escaparHTML(reg.b));
+  if (reg.d) meta.push(escaparHTML(reg.d));
+  else if (reg.a) meta.push(escaparHTML(String(reg.a)));
+  if (reg.p) meta.push('<span class="doc__tag">' + escaparHTML(reg.p) + '</span>');
+  if (reg.i) meta.push('<span class="doc__tag">' + escaparHTML(reg.i) + '</span>');
+  if (!reg.u) meta.push('<span class="doc__aviso">sem link</span>');
+
+  var interno =
+    '<span class="doc__num" aria-hidden="true"></span>' +
+    '<span class="doc__meta">' + meta.join('<span class="separador" aria-hidden="true">|</span>') + '</span>' +
+    '<span class="doc__titulo">' + realcar(reg.t, termos) + '</span>';
+
+  if (reg.u) {
+    var link = document.createElement('a');
+    link.className = 'doc__link';
+    link.href = reg.u;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.innerHTML = interno;
+    item.appendChild(link);
+  } else {
+    var bloco = document.createElement('div');
+    bloco.className = 'doc__link';
+    bloco.innerHTML = interno;
+    item.appendChild(bloco);
+  }
+
+  return item;
+}
+
+function atualizar(manterVisiveis) {
+  if (!manterVisiveis) estado.visiveis = LOTE;
+  estado.foco = -1;
+
+  var resultado = consultar();
+  estado.resultados = resultado.lista;
+
+  desenharAbas();
+  desenharFiltros(resultado);
+  desenharCabecalho(resultado);
+  desenharLista(resultado);
+
+  el.limpar.hidden = !estado.termo;
+  el.atalho.hidden = !!estado.termo;
+}
+
+/* ------------------------------------------------------------------
+   Eventos
+   ------------------------------------------------------------------ */
+
+var temporizador;
+el.q.addEventListener('input', function () {
+  clearTimeout(temporizador);
+  temporizador = setTimeout(function () {
+    estado.termo = el.q.value;
+    atualizar();
+  }, 110);
+});
+
+el.q.addEventListener('keydown', function (evento) {
+  if (evento.key === 'Escape') {
+    el.q.value = '';
+    estado.termo = '';
+    atualizar();
+  }
+  if (evento.key === 'ArrowDown') {
+    evento.preventDefault();
+    moverFoco(1);
+  }
+});
+
+el.limpar.addEventListener('click', function () {
+  el.q.value = '';
+  estado.termo = '';
+  el.q.focus();
+  atualizar();
+});
+
+el.navAbas.addEventListener('click', function (evento) {
+  var botao = evento.target.closest('[data-aba]');
+  if (!botao) return;
+  trocarAba(botao.dataset.aba === 'todas' ? 'todas' : Number(botao.dataset.aba));
+});
+
+el.distribuicao.addEventListener('click', function (evento) {
+  var botao = evento.target.closest('[data-aba]');
+  if (botao) trocarAba(Number(botao.dataset.aba));
+});
+
+el.escopo.addEventListener('click', function (evento) {
+  if (evento.target.id === 'irTodas') trocarAba('todas');
+});
+
+el.vazio.addEventListener('click', function (evento) {
+  if (evento.target.id === 'ampliar') {
+    estado.filtros = {};
+    trocarAba('todas');
+  }
+});
+
+el.filtros.addEventListener('change', function (evento) {
+  var alvo = evento.target;
+  if (!alvo.dataset.filtro) return;
+  if (alvo.dataset.filtro === 'ordem') estado.ordem = alvo.value;
+  else estado.filtros[alvo.dataset.filtro] = alvo.value;
+  atualizar();
+});
+
+el.filtros.addEventListener('click', function (evento) {
+  if (evento.target.id === 'zerarFiltros') {
+    estado.filtros = {};
+    estado.ordem = 'auto';
+    atualizar();
+  }
+});
+
+el.mais.addEventListener('click', function () {
+  estado.visiveis += LOTE;
+  atualizar(true);
+});
+
+el.lista.addEventListener('mouseover', function (evento) {
+  var linha = evento.target.closest('.doc');
+  if (!linha) return;
+  marcarFoco(Array.prototype.indexOf.call(el.lista.children, linha));
+});
+
+function trocarAba(aba) {
+  estado.aba = aba;
+  estado.filtros = {};
+  if (estado.ordem !== 'auto') estado.ordem = 'auto';
+  atualizar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* navegacao por teclado: / ou ctrl+k foca a busca, setas andam na lista */
+
+function marcarFoco(indice) {
+  Array.prototype.forEach.call(el.lista.children, function (linha, i) {
+    linha.classList.toggle('selecionado', i === indice);
+  });
+  estado.foco = indice;
+}
+
+function moverFoco(passo) {
+  var total = el.lista.children.length;
+  if (!total) return;
+  var novo = estado.foco + passo;
+  if (novo < 0) { marcarFoco(-1); el.q.focus(); return; }
+  if (novo >= total) novo = total - 1;
+  marcarFoco(novo);
+  el.lista.children[novo].scrollIntoView({ block: 'nearest' });
+  el.q.blur();
+}
+
+document.addEventListener('keydown', function (evento) {
+  var digitando = /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName);
+
+  if ((evento.key === '/' && !digitando) ||
+      ((evento.key || '').toLowerCase() === 'k' && (evento.ctrlKey || evento.metaKey))) {
+    evento.preventDefault();
+    el.q.focus();
+    el.q.select();
+    return;
+  }
+
+  if (digitando && document.activeElement !== el.q) return;
+
+  // digitou uma letra fora da busca: leva o cursor para la sem perder o caractere
+  if (!digitando && (evento.key || '').length === 1 &&
+      !evento.ctrlKey && !evento.metaKey && !evento.altKey) {
+    el.q.focus();
+    return;
+  }
+
+  if (evento.key === 'ArrowDown') { evento.preventDefault(); moverFoco(1); }
+  else if (evento.key === 'ArrowUp') { evento.preventDefault(); moverFoco(-1); }
+  else if (evento.key === 'Enter' && estado.foco >= 0) {
+    var link = el.lista.children[estado.foco].querySelector('a.doc__link');
+    if (link) { evento.preventDefault(); window.open(link.href, '_blank', 'noopener'); }
+  }
+});
+
+/* tema */
+
+function aplicarTema(tema) {
+  document.documentElement.setAttribute('data-tema', tema);
+  el.tema.textContent = tema === 'escuro' ? 'Modo claro' : 'Modo escuro';
+  try { localStorage.setItem('lo_tema', tema); } catch (erro) { /* sessao anonima */ }
+}
+
+el.tema.addEventListener('click', function () {
+  var atual = document.documentElement.getAttribute('data-tema');
+  aplicarTema(atual === 'escuro' ? 'claro' : 'escuro');
+});
+
+(function iniciarTema() {
+  var salvo = null;
+  try { salvo = localStorage.getItem('lo_tema'); } catch (erro) { /* ignora */ }
+  if (!salvo) {
+    salvo = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'escuro' : 'claro';
+  }
+  aplicarTema(salvo);
+})();
+
+/* rodape */
+
+el.atualizado.textContent = 'Dados lidos em ' + (ACERVO.geradoEm || '-') + '.';
+el.rodapeAtualizado.textContent = 'Dados lidos em ' + (ACERVO.geradoEm || '-') + '.';
+el.linkPlanilha.href = ACERVO.planilha || '#';
+
+el.recarregar.addEventListener('click', function () {
+  var base = window.location.href.split('?')[0];
+  window.top.location.href = base + '?recarregar=1';
+});
+
+/* impressao: manda tudo para o papel, nao so o lote visivel */
+window.addEventListener('beforeprint', function () {
+  if (estado.visiveis < estado.resultados.length) {
+    estado.visiveis = estado.resultados.length;
+    atualizar(true);
+  }
+});
+
+atualizar();
+el.q.focus();
+
+})();
+</script>
+</body>
+</html>
