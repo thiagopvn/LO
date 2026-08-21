@@ -48,6 +48,11 @@ html[data-tema="escuro"]{
 
 *{box-sizing:border-box}
 
+/* .mais, .contagem, .distribuicao e .filtros definem display por classe e,
+   sem esta regra, venceriam o [hidden] do navegador: os blocos continuavam
+   na tela depois que o script pedia para escondê-los. */
+[hidden]{display:none !important}
+
 html,body{margin:0;padding:0}
 
 body{
@@ -406,7 +411,7 @@ a.doc__link:hover .doc__titulo{text-decoration:underline;text-underline-offset:2
 </head>
 
 <body>
-<a class="pular" href="#lista">Ir direto para a lista</a>
+<a class="pular" href="#lista" target="_self">Ir direto para a lista</a>
 <div class="faixa"></div>
 
 <header class="topo">
@@ -503,21 +508,25 @@ function normalizar(texto) {
     .normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 
-// prepara o texto pesquisavel de cada registro uma unica vez
-REGISTROS.forEach(function (reg, i) {
-  var colecao = COLECOES[reg.c] || { nome: '' };
-  var pedacos = [reg.t, colecao.nome];
-  if (reg.b) pedacos.push('bol ' + reg.b, 'boletim ' + reg.b);
-  if (reg.d) pedacos.push(reg.d);
-  if (reg.a) pedacos.push(reg.a);
-  if (reg.i) pedacos.push(reg.i);
-  if (reg.p) pedacos.push(reg.p);
+// prepara o texto pesquisavel de cada registro; roda de novo quando a
+// planilha e relida pelo botao do rodape
+function prepararRegistros() {
+  REGISTROS.forEach(function (reg, i) {
+    var colecao = COLECOES[reg.c] || { nome: '' };
+    var pedacos = [reg.t, colecao.nome];
+    if (reg.b) pedacos.push('bol ' + reg.b, 'boletim ' + reg.b);
+    if (reg.d) pedacos.push(reg.d);
+    if (reg.a) pedacos.push(reg.a);
+    if (reg.i) pedacos.push(reg.i);
+    if (reg.p) pedacos.push(reg.p);
 
-  reg._i = i;
-  reg._t = normalizar(reg.t);
-  reg._todos = normalizar(pedacos.join(' '));
-  reg._ordem = reg.s || 0;
-});
+    reg._i = i;
+    reg._t = normalizar(reg.t);
+    reg._todos = normalizar(pedacos.join(' '));
+    reg._ordem = reg.s || 0;
+  });
+}
+prepararRegistros();
 
 var ACENTOS = {
   a: 'aàáâãä', e: 'eèéêë',
@@ -539,12 +548,12 @@ function padraoDoTermo(termo) {
 
 function escaparHTML(texto) {
   return String(texto)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 function realcar(titulo, termos) {
-  var html = escaparHTML(titulo);
-  if (!termos.length) return html;
+  if (!termos.length) return escaparHTML(titulo);
 
   // nao pinta "de", "do", "e"... so atrapalha a leitura do titulo
   var uteis = termos.filter(function (termo) {
@@ -552,13 +561,27 @@ function realcar(titulo, termos) {
   });
 
   var padrao = uteis.map(padraoDoTermo).join('|');
-  if (!padrao) return html;
+  if (!padrao) return escaparHTML(titulo);
 
+  var regex;
   try {
-    return html.replace(new RegExp('(' + padrao + ')', 'gi'), '<mark>$1</mark>');
+    regex = new RegExp(padrao, 'gi');
   } catch (erro) {
-    return html;
+    return escaparHTML(titulo);
   }
+
+  // recorta no texto cru e escapa cada pedaco: assim o <mark> nunca cai
+  // no meio de uma entidade (&amp;) ja escapada
+  var html = '';
+  var fim = 0;
+  var achado;
+  while ((achado = regex.exec(titulo)) !== null) {
+    if (!achado[0]) { regex.lastIndex++; continue; }
+    html += escaparHTML(titulo.slice(fim, achado.index)) +
+            '<mark>' + escaparHTML(achado[0]) + '</mark>';
+    fim = achado.index + achado[0].length;
+  }
+  return html + escaparHTML(titulo.slice(fim));
 }
 
 /* ------------------------------------------------------------------
@@ -575,6 +598,7 @@ function interpretar(entrada) {
     frases.push(frase.trim());
     return ' ';
   }).split(/\s+/).forEach(function (palavra) {
+    palavra = palavra.replace(/"/g, '');   // aspas sem par nao sao termo
     if (palavra) termos.push(palavra);
   });
 
@@ -851,13 +875,23 @@ function desenharLista(resultado) {
     el.contagem.hidden = true;
     el.vazio.hidden = false;
     el.vazio.className = 'vazio';
+    // a saida so aparece quando ela realmente muda a consulta: dentro de
+    // "Todas as abas" e sem filtro, ampliar seria um clique sem efeito
+    var podeAmpliar = estado.aba !== 'todas' || filtrosAtivos();
+    var saida = podeAmpliar
+      ? '<button type="button" id="ampliar">buscar em todas as abas sem filtro</button>'
+      : (estado.termo.trim()
+          ? '<button type="button" id="limparBusca">limpar a busca</button>'
+          : '');
+
     el.vazio.innerHTML =
       '<h2>Nenhum documento encontrado</h2>' +
       '<p>Nada corresponde a <b>' + escaparHTML(estado.termo.trim() || '(sem termo)') + '</b>' +
       (estado.aba === 'todas' ? '' : ' em ' + escaparHTML(COLECOES[estado.aba].nome)) +
       (filtrosAtivos() ? ' com os filtros aplicados' : '') + '.</p>' +
-      '<p>Tente menos palavras, o número do boletim ou ' +
-      '<button type="button" id="ampliar">buscar em todas as abas sem filtro</button>.</p>';
+      (saida
+        ? '<p>Tente menos palavras, o número do boletim ou ' + saida + '.</p>'
+        : '<p>Tente menos palavras ou o número do boletim.</p>');
   } else {
     el.vazio.hidden = true;
     el.vazio.innerHTML = '';
@@ -973,8 +1007,12 @@ el.escopo.addEventListener('click', function (evento) {
 
 el.vazio.addEventListener('click', function (evento) {
   if (evento.target.id === 'ampliar') {
-    estado.filtros = {};
-    trocarAba('todas');
+    trocarAba('todas');            // trocarAba ja zera os filtros
+  } else if (evento.target.id === 'limparBusca') {
+    el.q.value = '';
+    estado.termo = '';
+    el.q.focus();
+    atualizar();
   }
 });
 
@@ -1034,6 +1072,7 @@ function moverFoco(passo) {
 }
 
 document.addEventListener('keydown', function (evento) {
+  if (evento.defaultPrevented) return;   // o campo de busca ja tratou a tecla
   var digitando = /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName);
 
   if ((evento.key === '/' && !digitando) ||
@@ -1057,7 +1096,7 @@ document.addEventListener('keydown', function (evento) {
   else if (evento.key === 'ArrowUp') { evento.preventDefault(); moverFoco(-1); }
   else if (evento.key === 'Enter' && estado.foco >= 0) {
     var link = el.lista.children[estado.foco].querySelector('a.doc__link');
-    if (link) { evento.preventDefault(); window.open(link.href, '_blank', 'noopener'); }
+    if (link) { evento.preventDefault(); link.click(); }
   }
 });
 
@@ -1090,9 +1129,51 @@ el.atualizado.textContent = 'Dados lidos em ' + (ACERVO.geradoEm || '-') + '.';
 el.rodapeAtualizado.textContent = 'Dados lidos em ' + (ACERVO.geradoEm || '-') + '.';
 el.linkPlanilha.href = ACERVO.planilha || '#';
 
+/*
+   Dentro do Apps Script a pagina roda num iframe cujo endereco e o do sandbox
+   (googleusercontent), nao o /exec. Montar a URL a partir de window.location
+   mandava o navegador para um endereco que nao existe. A releitura agora e
+   pedida ao servidor e a tela e redesenhada aqui mesmo.
+*/
+function aplicarAcervo(acervo) {
+  ACERVO = acervo;
+  COLECOES = acervo.colecoes || [];
+  REGISTROS = acervo.registros || [];
+  prepararRegistros();
+
+  if (estado.aba !== 'todas' && !COLECOES[estado.aba]) estado.aba = 'todas';
+  estado.filtros = {};
+  atualizar();
+
+  el.atualizado.textContent = 'Dados lidos em ' + (ACERVO.geradoEm || '-') + '.';
+  el.rodapeAtualizado.textContent = 'Dados lidos em ' + (ACERVO.geradoEm || '-') + '.';
+  el.linkPlanilha.href = ACERVO.planilha || '#';
+}
+
 el.recarregar.addEventListener('click', function () {
-  var base = window.location.href.split('?')[0];
-  window.top.location.href = base + '?recarregar=1';
+  if (typeof google === 'undefined' || !google.script || !google.script.run) return;
+
+  var rotulo = 'Reler a planilha agora';
+  el.recarregar.disabled = true;
+  el.recarregar.textContent = 'Relendo a planilha...';
+
+  google.script.run
+    .withSuccessHandler(function (json) {
+      var novo = null;
+      try { novo = JSON.parse(json); } catch (erro) { novo = null; }
+      el.recarregar.disabled = false;
+      if (novo && novo.registros) {
+        aplicarAcervo(novo);
+        el.recarregar.textContent = rotulo;
+      } else {
+        el.recarregar.textContent = 'Não consegui reler. Clique para tentar de novo.';
+      }
+    })
+    .withFailureHandler(function () {
+      el.recarregar.disabled = false;
+      el.recarregar.textContent = 'Não consegui reler. Clique para tentar de novo.';
+    })
+    .recarregarAcervo();
 });
 
 /* impressao: manda tudo para o papel, nao so o lote visivel */

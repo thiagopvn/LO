@@ -39,6 +39,17 @@ function doGet(e) {
 
 
 /**
+ * Chamada pelo botao "Reler a planilha agora" (rodape da pagina) via
+ * google.script.run. Devolve o mesmo JSON que a pagina recebe no carregamento,
+ * ja com o cache renovado - por isso a pagina nao precisa ser recarregada.
+ */
+function recarregarAcervo() {
+  limparCache();
+  return obterAcervoJSON_();
+}
+
+
+/**
  * Limpa o cache do acervo. Pode ser rodada na mao pelo editor do Apps Script
  * (menu de funcoes -> limparCache -> Executar) ou pelo link no rodape da pagina.
  */

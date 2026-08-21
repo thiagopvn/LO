@@ -75,14 +75,14 @@ A implantação oficial — a que está no `index.html` do Vercel e em todo link
 compartilhado — é a que começa com:
 
 ```
-AKfycbzirl9IUQq7m2rYPLnPV3_J8Qz_SuGz0T5XtPBLLqomAVt-m5RnRWgeRlqh6j9X1qL9
+AKfycbz32PLqshatp90ixsADwErIE8jIh4SkFfCcJXWzdJ-j08Xkgb5F7Z7j-ELtMS05hrO1
 ```
 
 **É essa que você edita.** Se clicar em "Nova implantação" em vez do lápis, o Google cria
-outra URL (foi o que aconteceu com a `AKfycbzLHpls…`): o código novo vai para um endereço
-que ninguém usa, e o site continua mostrando a versão velha. Quando isso acontecer:
-edite a implantação de cima para a versão nova e **arquive** a duplicada
-(⋮ ao lado dela → Arquivar).
+outra URL (foi o que aconteceu com a `AKfycbzLHpls…` e com a `AKfycbzirl9…`): o código
+novo vai para um endereço que ninguém usa, e o site continua mostrando a versão velha.
+Quando isso acontecer: edite a implantação de cima para a versão nova e **arquive** a
+duplicada (⋮ ao lado dela → Arquivar).
 
 ### Confira o acesso
 
@@ -107,6 +107,26 @@ Os dados ficam em cache por 6 horas para a página abrir rápido. Para forçar a
 ---
 
 ## O que mudou (resumo)
+
+**Correções desta versão (botões que não respondiam)**
+- O botão **"Mostrar mais 60"** continuava na tela mesmo quando a busca não achava nada,
+  com a contagem da busca anterior; clicar nele não fazia nada. Era o CSS: as classes
+  definiam `display` e venciam o `hidden` do navegador. Agora o `[hidden]` vence sempre
+  (vale também para a contagem e para a barra de abas do resultado).
+- **"Buscar em todas as abas sem filtro"** aparecia mesmo quando já se estava em *Todas
+  as abas* e sem filtro nenhum — ou seja, o clique não tinha o que mudar. Agora esse
+  botão só aparece quando ele realmente amplia a busca; no outro caso a página oferece
+  **"limpar a busca"**.
+- **"Reler a planilha agora"** (rodapé) mandava o navegador para o endereço interno do
+  iframe do Apps Script, e não para o `/exec`. Agora ele pede a releitura ao servidor
+  (função nova `recarregarAcervo` no `Código.gs`) e redesenha a lista na hora, sem sair
+  da página.
+- **"Ir direto para a lista"** (link de acessibilidade) recarregava o sistema inteiro.
+- Seta **↓** dentro do campo de busca pulava dois documentos de uma vez.
+- **Enter** para abrir o documento usava `window.open`, que o iframe do Apps Script pode
+  bloquear; agora usa o próprio link da linha.
+- Aspas sem par (`"nota`) zeravam o resultado, e títulos com `&` podiam ter o realce
+  amarelo cortando a entidade HTML no meio.
 
 **Busca**
 - Cada aba é uma coleção de verdade: você escolhe **onde** está procurando na lateral
